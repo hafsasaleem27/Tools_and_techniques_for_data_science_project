@@ -46,8 +46,8 @@ print("Number of duplicate crashes:", duplicates.sum())
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 
-# dup_rows = df[df.duplicated(subset=['CRASH DATE', 'CRASH TIME', 'ON STREET NAME', 'CROSS STREET NAME'], keep=False)]
-# print(dup_rows)
+dup_rows = df[df.duplicated(subset=['CRASH DATE', 'CRASH TIME', 'ON STREET NAME', 'CROSS STREET NAME'], keep=False)]
+print(dup_rows)
 
 #---------------------------------------
 # Data Wrangling
@@ -199,6 +199,7 @@ plt.show()
 # MACHINE LEARNING MODELS
 #---------------------------------------
 
+# ML technique 1
 # Injury prediction
 
 # Create target variable
