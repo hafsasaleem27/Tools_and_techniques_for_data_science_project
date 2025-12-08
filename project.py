@@ -176,22 +176,6 @@ df = df.dropna(subset=["LATITUDE", "LONGITUDE"])
 
 plt.figure(figsize=(10, 10))
 
-# Scatter plot
-plt.scatter(
-    df["LONGITUDE"], 
-    df["LATITUDE"], 
-    s=5,                  # small dot size
-    alpha=0.4,            # transparency
-    edgecolors='none'
-)
-
-plt.title("Scatter Map of Collision Locations")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
-
-plt.grid(True)
-plt.show()
-
 #---------------------------------------
 # MACHINE LEARNING MODELS
 #---------------------------------------
