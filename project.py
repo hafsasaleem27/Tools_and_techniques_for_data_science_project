@@ -37,7 +37,7 @@ print(df.isna().sum())
 print("Duplicate rows: ", df.duplicated())
 print("Sum of duplicate Rows: ", df.duplicated().sum())
 
-print(df.columns.tolist())
+# print(df.columns.tolist())
 
 # Example: check duplicates based on date, time, and street info
 duplicates = df.duplicated(subset=['CRASH DATE', 'CRASH TIME', 'ON STREET NAME', 'CROSS STREET NAME'])
@@ -47,7 +47,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 
 dup_rows = df[df.duplicated(subset=['CRASH DATE', 'CRASH TIME', 'ON STREET NAME', 'CROSS STREET NAME'], keep=False)]
-print(dup_rows)
+# print(dup_rows)
 
 #---------------------------------------
 # Data Wrangling
@@ -135,13 +135,6 @@ sns.countplot(
 )
 plt.title("Top 10 Vehicle Types Involved in Crashes")
 plt.xticks(rotation=90)
-plt.tight_layout()
-plt.show()
-
-# correlation heatmap
-plt.figure(figsize=(10,7))
-sns.heatmap(df[inj_cols].corr(), annot=True, cmap="coolwarm")
-plt.title("Correlation Between Injury/Fatality Variables")
 plt.tight_layout()
 plt.show()
 
