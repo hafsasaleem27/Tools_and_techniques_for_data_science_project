@@ -41,8 +41,6 @@ print(df.isna().sum())
 print("Duplicate rows: ", df.duplicated())
 print("Sum of duplicate Rows: ", df.duplicated().sum())
 
-# print(df.columns.tolist())
-
 # Example: check duplicates based on date, time, and street info
 duplicates = df.duplicated(subset=['CRASH DATE', 'CRASH TIME', 'ON STREET NAME', 'CROSS STREET NAME'])
 print("Number of duplicate crashes:", duplicates.sum())
@@ -86,6 +84,18 @@ num_cols = [
 ]
 
 df[num_cols] = df[num_cols].apply(pd.to_numeric, errors='coerce')
+
+# Drop rows with missing coordinates
+df = df.dropna(subset=["LATITUDE", "LONGITUDE"])
+
+# plt.figure(figsize=(10, 10))
+
+# Remove invalid coordinates
+df = df[(df["LATITUDE"] >= 40) & (df["LATITUDE"] <= 42)]
+df = df[(df["LONGITUDE"] >= -76) & (df["LONGITUDE"] <= -72)]
+
+print(df["LATITUDE"].min(), df["LATITUDE"].max())
+print(df["LONGITUDE"].min(), df["LONGITUDE"].max())
 
 #---------------------------------------
 # DATA VISUALIZATIONS 
@@ -171,11 +181,6 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 
-# Drop rows with missing coordinates
-df = df.dropna(subset=["LATITUDE", "LONGITUDE"])
-
-plt.figure(figsize=(10, 10))
-
 #---------------------------------------
 # MACHINE LEARNING MODELS
 #---------------------------------------
@@ -186,8 +191,8 @@ plt.figure(figsize=(10, 10))
 # Create target variable
 df["ANY_INJURY"] = (df["NUMBER OF PERSONS INJURED"] > 0).astype(int)
 
-# Extract hour FAST
-df["HOUR"] = df["CRASH TIME"].str.slice(0, 2)
+df["CRASH TIME"] = pd.to_datetime(df["CRASH TIME"], errors="coerce")
+df["HOUR"] = df["CRASH TIME"].dt.hour  # Extract hour FAST
 
 # Convert hour to numeric
 df["HOUR"] = pd.to_numeric(df["HOUR"], errors="coerce")
