@@ -5,6 +5,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
+from sklearn.metrics import mean_squared_error
+from xgboost import XGBRegressor
+from sklearn.cluster import KMeans
+from prophet import Prophet
 # set the style to whitegrid
 sns.set_theme(style="whitegrid")
 
@@ -235,3 +239,61 @@ pred = model.predict(X_test)
 
 # Results
 print(classification_report(y_test, pred))
+
+
+
+# ML Technique 2
+# Injury Count Prediction (Regression)
+df = df.dropna(subset=["LATITUDE", "LONGITUDE", "NUMBER OF PERSONS INJURED"])
+
+X = df[["LATITUDE", "LONGITUDE"]]
+y = df["NUMBER OF PERSONS INJURED"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = XGBRegressor()
+model.fit(X_train, y_train)
+
+pred = model.predict(X_test)
+
+mse = mean_squared_error(y_test, pred)
+print("Mean Squared Error:", mse)
+
+# ML technique 3
+# Accident Hotspot Clustering (K-Means)
+df = df.dropna(subset=["LATITUDE", "LONGITUDE"])
+
+coords = df[["LATITUDE", "LONGITUDE"]]
+
+# K-means clustering
+kmeans = KMeans(n_clusters=5, random_state=42)
+df["CLUSTER"] = kmeans.fit_predict(coords)
+
+# Plot clusters
+plt.figure(figsize=(10, 7))
+plt.scatter(df["LONGITUDE"], df["LATITUDE"], c=df["CLUSTER"], s=10)
+plt.title("Accident Hotspots (K-Means Clustering)")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.show()
+
+# ML Technique 4
+# Time Series Forecasting (Predict Crash Frequency)
+# Prepare time series: count crashes per day
+df["CRASH DATE"] = pd.to_datetime(df["CRASH DATE"], errors='coerce')
+daily = df.groupby("CRASH DATE").size().reset_index(name='count')
+
+daily.rename(columns={"CRASH DATE": "ds", "count": "y"}, inplace=True)
+
+# Prophet model
+m = Prophet()
+m.fit(daily)
+
+# Future predictions (next 60 days)
+future = m.make_future_dataframe(periods=60)
+forecast = m.predict(future)
+
+# Plot forecast
+m.plot(forecast)
+plt.title("Forecast of Daily Crashes")
+plt.show()
